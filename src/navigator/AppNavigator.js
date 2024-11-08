@@ -1,31 +1,30 @@
-// import React from 'react';
-// import { NavigationContainer } from '@react-navigation/native';
-// import MainScreen from '../screens/MainScreen';
-// import ConfigureLED from '../screens/ConfigureLED';
-// import { createNativeStackNavigator } from '@react-navigation/native-stack';
-// import { RootStackParamList } from './types/types';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import MainScreen from '../screens/MainScreen';
+import SecondPage from '../screens/SecondPage';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+const Stack = createNativeStackNavigator();
 
-// const RootStack = createNativeStackNavigator<RootStackParamList>();
+const AppNavigator = () => {
+    return (
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+            headerShown: false
+        }}
+      >
+        <Stack.Screen
+          name = "MainScreen"
+          component = { MainScreen }
+        />
+        <Stack.Screen
+          name = "SecondPage"
+          component = { SecondPage }
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+    );
+}
 
-// const AppNavigator = () => {
-//     return (
-//         <NavigationContainer>
-//             <RootStack.Navigator
-//                 initialRouteName='MainScreen'
-//             >
-//                 <RootStack.Screen
-//                     name = "MainScreen"
-//                     component = { MainScreen }
-                    
-//                 />
-//                 <RootStack.Screen
-//                     name = "ConfigureLED"
-//                     component = { ConfigureLED }
-//                 />
-//             </RootStack.Navigator>
-//         </NavigationContainer>
-//     );
-// }
-
-// export default AppNavigator;
+export default AppNavigator;
