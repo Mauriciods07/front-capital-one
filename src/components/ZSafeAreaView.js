@@ -3,19 +3,24 @@ import React from 'react';
 
 import { colors } from '../configuration/colors';
 
-const ZSafeAreaView = ({children, ...props}) => {
+const ZSafeAreaView = ({style, children, ...props}) => {
+    bg_color = colors.secondary
+    if (style == 'white') {
+        bg_color = colors.bg
+    }
+
   return (
-    <SafeAreaView {...props} style={[localStyles(colors).root]}>
+    <SafeAreaView {...props} style={[localStyles(bg_color).root]}>
       {children}
     </SafeAreaView>
   );
 };
 
-const localStyles = (colors) =>
+const localStyles = (color) =>
   StyleSheet.create({
     root: {
         flex: 1,
-        backgroundColor: colors.secondary,
+        backgroundColor: color,
         alignItems: 'center',
         justifyContent: 'center',
     },

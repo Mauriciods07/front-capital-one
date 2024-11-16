@@ -1,8 +1,9 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import MainScreen from '../screens/MainScreen';
-import SecondPage from '../screens/SecondPage';
+import MainScreen from '../screens/auth/MainScreen';
+import RegisterPage from '../screens/auth/RegisterPage';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import LoginPage from '../screens/auth/LoginPage';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,8 +20,12 @@ const AppNavigator = () => {
           component = { MainScreen }
         />
         <Stack.Screen
-          name = "SecondPage"
-          component = { SecondPage }
+          name = "RegisterPage"
+          component = { RegisterPage }
+        />
+        <Stack.Screen
+          name = "LoginPage"
+          component={ LoginPage }
         />
       </Stack.Navigator>
     </NavigationContainer>

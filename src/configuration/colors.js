@@ -5,4 +5,9 @@ export const colors = {
     highlights: "#BF9106",
     minor: "#F2C288",
     bg: "#FAFAFA",
+    grey: "#919191",
+    lightGrey: "#ebe8e8",
+    black: "#000000",
+    white: "#FFFFFF",
+    red: "#ba2d2d"
 }

@@ -1,10 +1,12 @@
 import { Text, Pressable, View, StyleSheet, Image } from "react-native";
-import ZSafeAreaView from "../components/ZSafeAreaView";
-import { colors } from "../configuration/colors";
+import ZSafeAreaView from "../../components/ZSafeAreaView";
+import { colors } from "../../configuration/colors";
 
 const MainScreen = ({navigation}) => {
   return (
-    <ZSafeAreaView>
+    <ZSafeAreaView
+      style='blue'
+    >
       <Text
         style={localStyles.title}
       >
@@ -13,10 +15,18 @@ const MainScreen = ({navigation}) => {
       <Text
         style={localStyles.subtitle}
       >
-        ¿Estás listo para continuar?
+        Te damos la bienvenida a Viajerapp
+      </Text>
+      <Text
+        style={localStyles.subtitle}
+      >
+        Ingresa para tu próxima aventura
       </Text>
       <Pressable
         style={[localStyles.button, localStyles.registerBtn]}
+        onPress={() => {
+          navigation.navigate("RegisterPage");
+        }}
       >
         <Text
           style={[localStyles.btnText, localStyles.registerTxt]}
@@ -24,17 +34,20 @@ const MainScreen = ({navigation}) => {
       </Pressable>
       <Pressable
         style={[localStyles.button, localStyles.loginBtn]}
+        onPress={() => {
+          navigation.navigate("LoginPage");
+        }}
       >
         <Text
           style={[localStyles.btnText, localStyles.loginTxt]}
-        >Iniciar</Text>
+        >Iniciar sesión</Text>
       </Pressable>
       <View style={localStyles.logoContainer}>
         <View style={[localStyles.circle, localStyles.mainCircle]}></View>
         <View style={localStyles.plane}>
           <Image 
             style={localStyles.plane}
-            source={require('../assets/images/logo-azulinos.png')}
+            source={require('../../assets/images/logo-azulinos.png')}
           />
         </View>
         <View style={[localStyles.circle, localStyles.secondCircle]}></View>
