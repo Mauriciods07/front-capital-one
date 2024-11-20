@@ -5,11 +5,11 @@ import { View,
     ScrollView, 
     Text,
     TextInput,
-    Pressable, 
-    Alert,
+    Pressable,
     TouchableOpacity} from "react-native";
 import { useState, useEffect } from "react";
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Snackbar from "react-native-snackbar";
 
 import ZSafeAreaView from "../../components/ZSafeAreaView";
 import ZHeader from "../../components/ZHeader";
@@ -17,6 +17,11 @@ import { colors } from "../../configuration/colors";
 import {
 validateEmail
 } from "../../utils/validators";
+import { setAsyncStorageData } from "../../utils/utils";
+import { PROFILE_ID } from "../../utils/constants";
+import { KeysNav } from "../../navigator/NavigationKeys";
+import { login } from "../../api/auth";
+import strings from "../../utils/strings";
 
 const LoginPage = ({navigation}) => {
     const BlurredStyle = {
@@ -78,19 +83,30 @@ const LoginPage = ({navigation}) => {
         setPassword(val.trim());
     }
 
-    const onPressContinue = () => {
-        const message = {
-            "Email":  email,
-            "Password":  password
-        }
-        Alert.alert("" + message);
+    const onPressContinue = async () => {
+        await login(email, password).then(async token => {
+            if ('token' in token) {
+                profile_id = token['profile_id'];
+                setAsyncStorageData(PROFILE_ID, profile_id);
+    
+                navigation.reset({
+                    index: 0,
+                    routes: [{name: KeysNav.TabBar}]
+                });
+            } else {
+                Snackbar.show({
+                    text: token['error'],
+                    duration: Snackbar.LENGTH_SHORT,
+                  });
+            }
+        });
     };
 
     return (
         <ZSafeAreaView
-        style='white'
+            style='white'
         >
-            <ZHeader title={"Iniciar sesión"}/>
+            <ZHeader title={strings.login}/>
             <KeyboardAvoidingView>
                 <ScrollView
                     nestedScrollEnabled={true}
@@ -106,7 +122,7 @@ const LoginPage = ({navigation}) => {
                         </View>
                         <View style={localStyles.inputField}>
                             <Text style={localStyles.text}>
-                                Correo electrónico
+                                {strings.email}
                             </Text>
                             <TextInput
                                 style={[localStyles.input, EmailInputStyle,
@@ -119,7 +135,7 @@ const LoginPage = ({navigation}) => {
                                 placeholderTextColor={colors.grey}
                                 onFocus={onFocusEmail}
                                 onBlur={onBlurEmail}
-                                placeholder={'Ingresar contraseña'}
+                                placeholder={strings.ingressEmail}
                                 onChangeText={onChangedEmail}
                                 keyboardType="email-address"
                             />
@@ -131,7 +147,7 @@ const LoginPage = ({navigation}) => {
                         </View>
                         <View style={localStyles.inputField}>
                             <Text style={localStyles.text}>
-                                Contraseña
+                                {strings.password}
                             </Text>
                             <View style={localStyles.passwordContainer}>
                                 <View>
@@ -145,7 +161,7 @@ const LoginPage = ({navigation}) => {
                                         placeholderTextColor={colors.grey}
                                         onFocus={onFocusPassword}
                                         onBlur={onBlurPassword}
-                                        placeholder={'Ingresar contraseña'}
+                                        placeholder={strings.ingressPassword}
                                         onChangeText={onChangedPassword}
                                     />
                                 </View>
@@ -166,7 +182,7 @@ const LoginPage = ({navigation}) => {
                             >
                                 <Text
                                     style={localStyles.btnText}
-                                >Acceder</Text>
+                                >{strings.access}</Text>
                             </Pressable>
                         </View>
                     </View>

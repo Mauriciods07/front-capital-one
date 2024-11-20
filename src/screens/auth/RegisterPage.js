@@ -5,12 +5,12 @@ import { View,
          ScrollView, 
          Text,
          TextInput,
-         Pressable, 
-         Alert,
+         Pressable,
          TouchableOpacity} from "react-native";
 import { useState, useEffect } from "react";
 import CheckBox from "expo-checkbox";
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Snackbar from "react-native-snackbar";
 
 import ZSafeAreaView from "../../components/ZSafeAreaView";
 import { colors } from "../../configuration/colors";
@@ -20,6 +20,11 @@ import {
   validateSecondPassword
 } from "../../utils/validators";
 import ZHeader from "../../components/ZHeader";
+import { signup } from "../../api/auth";
+import { setAsyncStorageData } from "../../utils/utils";
+import { PROFILE_ID } from "../../utils/constants";
+import { KeysNav } from "../../navigator/NavigationKeys";
+import strings from "../../utils/strings";
 
 const RegisterPage = ({navigation}) => {
   const BlurredStyle = {
@@ -129,13 +134,29 @@ const RegisterPage = ({navigation}) => {
     setName(val.trim());
   }
 
-  const onPressContinue = () => {
-    const message = {
-      "Email":  email,
-      "Password":  password,
-      "Nombre": name
+  const onPressContinue = async () => {
+    user = {
+      email: email,
+      password: password,
+      name: name
     }
-    Alert.alert("" + message);
+
+    await signup(user).then(async token => {
+        if ('profile_id' in token) {
+            profile_id = token['profile_id'];
+            setAsyncStorageData(PROFILE_ID, profile_id);
+
+            navigation.reset({
+                index: 0,
+                routes: [{name: KeysNav.TabBar}]
+            });
+        } else {
+            Snackbar.show({
+                text: token['error'],
+                duration: Snackbar.LENGTH_SHORT,
+              });
+        }
+    });
   };
 
   return (
@@ -143,7 +164,7 @@ const RegisterPage = ({navigation}) => {
       style=
       'white'
     >
-      <ZHeader title={"Registro"}/>
+      <ZHeader title={strings.register}/>
       <KeyboardAvoidingView>
         <ScrollView
           nestedScrollEnabled={true}
@@ -159,7 +180,7 @@ const RegisterPage = ({navigation}) => {
             </View>
             <View style={localStyles.inputField}>
               <Text style={localStyles.text}>
-                Correo electrónico
+                {strings.email}
               </Text>
               <TextInput
                 style={[localStyles.input, EmailInputStyle,
@@ -172,7 +193,7 @@ const RegisterPage = ({navigation}) => {
                 placeholderTextColor={colors.grey}
                 onFocus={onFocusEmail}
                 onBlur={onBlurEmail}
-                placeholder={'Ingresar contraseña'}
+                placeholder={strings.ingressEmail}
                 onChangeText={onChangedEmail}
                 keyboardType="email-address"
               />
@@ -184,7 +205,7 @@ const RegisterPage = ({navigation}) => {
             </View>
             <View style={localStyles.inputField}>
               <Text style={localStyles.text}>
-                Contraseña
+                {strings.password}
               </Text>
               <View style={localStyles.passwordContainer}>
                 <View>
@@ -199,7 +220,7 @@ const RegisterPage = ({navigation}) => {
                     placeholderTextColor={colors.grey}
                     onFocus={onFocusPassword}
                     onBlur={onBlurPassword}
-                    placeholder={'Ingresar contraseña'}
+                    placeholder={strings.ingressPassword}
                     onChangeText={onChangedPassword}
                   />
                   {passwordError && 
@@ -219,7 +240,7 @@ const RegisterPage = ({navigation}) => {
             </View>
             <View style={localStyles.inputField}>
               <Text style={localStyles.text}>
-                Confirmar contraseña
+                {strings.confirmPassword}
               </Text>
               <View style={localStyles.passwordContainer}>
                 <View>
@@ -234,7 +255,7 @@ const RegisterPage = ({navigation}) => {
                     placeholderTextColor={colors.grey}
                     onFocus={onFocusConfirmPassword}
                     onBlur={onBlurConfirmPassword}
-                    placeholder={'Confirmar contraseña'}
+                    placeholder={strings.confirmPassword}
                     onChangeText={onChangedConfirmPassword}
                   />
                   {confirmPasswordError && 
@@ -252,7 +273,7 @@ const RegisterPage = ({navigation}) => {
             </View>
             <View style={localStyles.inputField}>
               <Text style={localStyles.text}>
-                Nombre
+                {strings.name}
               </Text>
               <TextInput
                 style={[localStyles.input, nameInputStyle]}
@@ -263,7 +284,7 @@ const RegisterPage = ({navigation}) => {
                 placeholderTextColor={colors.grey}
                 onFocus={onFocusName}
                 onBlur={onBlurName}
-                placeholder={'Ingresar contraseña'}
+                placeholder={strings.ingressName}
                 onChangeText={onChangedName}
               />
             </View>
@@ -274,7 +295,7 @@ const RegisterPage = ({navigation}) => {
                 onValueChange={() => setIsSelected(!isSelected)}
                 />
                 <Text style={localStyles.text}>
-                  Acepto los términos y condiciones
+                  {strings.termsAndConditions}
                 </Text>
             </View>
             <View>
@@ -287,7 +308,7 @@ const RegisterPage = ({navigation}) => {
               >
                 <Text
                   style={localStyles.btnText}
-                >Iniciar sesión</Text>
+                >{strings.register}</Text>
               </Pressable>
             </View>
           </View>

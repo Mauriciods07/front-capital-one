@@ -56,8 +56,38 @@ const validateSecondPassword = (psw, secondPsw) => {
     }
 }
 
+const validateNotEmptyName = (name) => {
+    if (!name) {
+        return {
+            status: false,
+            msg: "El nombre no puede estar vacío"
+        }
+    }
+
+    return {
+        status: true,
+        msg: ""
+    }
+}
+
+const validateDescription = (description) => {
+    if (description.length > 200) {
+        return {
+            status: false,
+            msg: "La longitud de la descripción debe ser menor a 200 caracteres."
+        }
+    }
+
+    return {
+        status: true,
+        msg: ""
+    }
+}
+
 export {
     validateEmail,
     validatePassword,
-    validateSecondPassword
+    validateSecondPassword,
+    validateNotEmptyName,
+    validateDescription
 }
